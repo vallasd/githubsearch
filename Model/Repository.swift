@@ -22,6 +22,16 @@ struct Repository {
         var repositories: [Repository] = []
     
         for dict in json {
+            let name = dict["name"].string
+            let owner = dict["owner"].dict
+            let login = owner["login"].string
+            let stars = dict["stargazers_count"].int
+            let forks = dict["forks"].int
+            let updated = dict["updated_at"].date
+            let languageURL = dict["languages_url"].string
+            let languages = Network.shared.getLanguages(withURL: languageURL)
+            let repo = Repository(name: name, login: login, languages: languages, stars: stars, forks: forks, updated: updated)
+            repositories.append(repo)
         }
         
         return repositories

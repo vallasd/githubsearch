@@ -12,4 +12,15 @@ struct Language {
     
     let name: String
     
+    static func parseJSON(json: Dictionary<String, AnyObject>) -> [Language] {
+        
+        var languages: [Language] = []
+        
+        for key in json.keys {
+            let language = Language(name: key)
+            languages.append(language)
+        }
+        
+        return languages
+    }
 }
