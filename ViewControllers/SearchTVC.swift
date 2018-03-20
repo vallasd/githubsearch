@@ -107,15 +107,15 @@ extension SearchTVC: UISearchBarDelegate {
                     }
                     
                     if let e = error {
-                        let alert = UIAlertController(title: "Error", message: e.localizedDescription, preferredStyle: .alert)
-                        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
                         DispatchQueue.main.async {
+                            let alert = UIAlertController(title: "Error", message: e.localizedDescription, preferredStyle: .alert)
+                            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
                             self?.present(alert, animated: true, completion: nil)
                         }
                     } else {
-                        self?.title = text
                         let rgblArray = RepositoriesGroupedByLanguage.sortRepositories(repos: repositories)
                         DispatchQueue.main.async {
+                            self?.title = text
                             self?.model = rgblArray
                         }
                     }
