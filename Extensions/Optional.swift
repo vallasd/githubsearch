@@ -34,6 +34,16 @@ extension Optional {
         return 0
     }
     
+    var stringLanguage: String {
+        if let string = self as? String {
+            if string == "" {
+                return "Unknown"
+            }
+            return string
+        }
+        return "Unknown"
+    }
+    
     var stringDescription: String {
         if let string = self as? String {
             if string == "" {

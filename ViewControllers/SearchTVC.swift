@@ -98,9 +98,11 @@ extension SearchTVC: UISearchBarDelegate {
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
         if let text = searchBar.text {
             if text != "" {
-                addSpinner()
                 
-                Network.shared.getRepositories(withUser: text, completion: { [weak self] (repositories, error) in
+                addSpinner()
+                Network.shared.resetGetRepositories()
+                
+                Network.shared.getRepositories(withSearch: text, completion: { [weak self] (repositories, error) in
                     
                     DispatchQueue.main.async {
                         self?.stopSpinner()

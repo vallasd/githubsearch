@@ -24,21 +24,20 @@ struct RepositoriesGroupedByLanguage {
         var currentLanguages: [String] = []
         var RGBLArray: [tempRGBL] = []
         
-        // this isn't the most efficient algorithm but works fine due to the small array sizes, code is cleaner
         for repo in repos {
-            for language in repo.languages {
-                
-                // if this is the first time we are seeing the language, append a new RGBL with the new language
-                if !currentLanguages.contains(language.name) {
-                    currentLanguages.append(language.name)
-                    let newRepo = tempRGBL(languageName: language.name, repositories: [])
-                    RGBLArray.append(newRepo)
-                }
-                
-                // find the index of the RepositoriesGroupedByLanguage and add the repo to that RGBL
-                if let i = RGBLArray.index(where: { $0.languageName == language.name }) {
-                    RGBLArray[i].repositories.append(repo)
-                }
+            
+            let language = repo.language
+            
+            // if this is the first time we are seeing the language, append a new RGBL with the new language
+            if !currentLanguages.contains(language) {
+                currentLanguages.append(language)
+                let newRepo = tempRGBL(languageName: language, repositories: [])
+                RGBLArray.append(newRepo)
+            }
+            
+            // find the index of the RepositoriesGroupedByLanguage and add the repo to that RGBL
+            if let i = RGBLArray.index(where: { $0.languageName == language }) {
+                RGBLArray[i].repositories.append(repo)
             }
         }
         

@@ -7,11 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		10095E3820617A0B0095453E /* URLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10095E3720617A0B0095453E /* URLSession.swift */; };
 		103B2905206031E600096D2E /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103B2904206031E600096D2E /* Network.swift */; };
 		103B29072060325600096D2E /* Repository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103B29062060325600096D2E /* Repository.swift */; };
-		103B29092060334800096D2E /* Language.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103B29082060334800096D2E /* Language.swift */; };
 		103B290B20603E3B00096D2E /* Optional.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103B290A20603E3B00096D2E /* Optional.swift */; };
-		103B290D20604DB400096D2E /* URLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103B290C20604DB400096D2E /* URLSession.swift */; };
 		103B29112060600F00096D2E /* LanguageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103B29102060600F00096D2E /* LanguageCell.swift */; };
 		103B29132060602200096D2E /* RepositoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103B29122060602200096D2E /* RepositoryCell.swift */; };
 		105F987820609A5A005B35D7 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 105F987720609A5A005B35D7 /* Date.swift */; };
@@ -45,11 +44,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		10095E3720617A0B0095453E /* URLSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSession.swift; sourceTree = "<group>"; };
 		103B2904206031E600096D2E /* Network.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
 		103B29062060325600096D2E /* Repository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Repository.swift; sourceTree = "<group>"; };
-		103B29082060334800096D2E /* Language.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Language.swift; sourceTree = "<group>"; };
 		103B290A20603E3B00096D2E /* Optional.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Optional.swift; sourceTree = "<group>"; };
-		103B290C20604DB400096D2E /* URLSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSession.swift; sourceTree = "<group>"; };
 		103B29102060600F00096D2E /* LanguageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageCell.swift; sourceTree = "<group>"; };
 		103B29122060602200096D2E /* RepositoryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryCell.swift; sourceTree = "<group>"; };
 		105F987720609A5A005B35D7 /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
@@ -108,7 +106,7 @@
 			isa = PBXGroup;
 			children = (
 				103B290A20603E3B00096D2E /* Optional.swift */,
-				103B290C20604DB400096D2E /* URLSession.swift */,
+				10095E3720617A0B0095453E /* URLSession.swift */,
 				105F987720609A5A005B35D7 /* Date.swift */,
 			);
 			path = Extensions;
@@ -127,7 +125,6 @@
 			isa = PBXGroup;
 			children = (
 				103B29062060325600096D2E /* Repository.swift */,
-				103B29082060334800096D2E /* Language.swift */,
 				10B4985520607351007A170B /* RepositoriesGroupedByLanguage.swift */,
 			);
 			path = Model;
@@ -334,9 +331,8 @@
 			files = (
 				103B29132060602200096D2E /* RepositoryCell.swift in Sources */,
 				108E952E20601CEE00CBE763 /* ViewController.swift in Sources */,
+				10095E3820617A0B0095453E /* URLSession.swift in Sources */,
 				103B29112060600F00096D2E /* LanguageCell.swift in Sources */,
-				103B290D20604DB400096D2E /* URLSession.swift in Sources */,
-				103B29092060334800096D2E /* Language.swift in Sources */,
 				10EC56E6206064360017BFFD /* RepositoryTVC.swift in Sources */,
 				10B4985620607351007A170B /* RepositoriesGroupedByLanguage.swift in Sources */,
 				10EC56E4206064280017BFFD /* SearchTVC.swift in Sources */,

@@ -13,7 +13,7 @@ struct Repository {
     let name: String
     let desc: String
     let login: String
-    let languages: [Language]
+    let language: String
     let stars: Int
     let forks: Int
     let updated: Date
@@ -30,9 +30,8 @@ struct Repository {
             let stars = dict["stargazers_count"].int
             let forks = dict["forks"].int
             let updated = dict["updated_at"].date
-            let languageURL = dict["languages_url"].string
-            let languages = Network.shared.getLanguages(withURL: languageURL)
-            let repo = Repository(name: name, desc: desc, login: login, languages: languages, stars: stars, forks: forks, updated: updated)
+            let language = dict["language"].stringLanguage
+            let repo = Repository(name: name, desc: desc, login: login, language: language, stars: stars, forks: forks, updated: updated)
             repositories.append(repo)
         }
         
