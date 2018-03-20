@@ -19,6 +19,12 @@ class SearchTVC: UITableViewController {
         }
     }
     
+    var repositories: [Repository] = [] {
+        didSet {
+            model = RepositoriesGroupedByLanguage.sortRepositories(repos: repositories)
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         searchBar.delegate = self
@@ -98,33 +104,39 @@ extension SearchTVC: UISearchBarDelegate {
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
         if let text = searchBar.text {
             if text != "" {
-                
                 addSpinner()
+                repositories = []
+                title = text
                 Network.shared.resetGetRepositories()
-                
-                Network.shared.getRepositories(withSearch: text, completion: { [weak self] (repositories, error) in
-                    
-                    DispatchQueue.main.async {
-                        self?.stopSpinner()
-                    }
-                    
-                    if let e = error {
-                        DispatchQueue.main.async {
-                            let alert = UIAlertController(title: "Error", message: e.localizedDescription, preferredStyle: .alert)
-                            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-                            self?.present(alert, animated: true, completion: nil)
-                        }
-                    } else {
-                        let rgblArray = RepositoriesGroupedByLanguage.sortRepositories(repos: repositories)
-                        DispatchQueue.main.async {
-                            self?.title = text
-                            self?.model = rgblArray
-                        }
-                    }
-                    
-                })
+                updateRepos(withString: text)
             }
         }
+    }
+    
+    fileprivate func updateRepos(withString s: String) {
+        
+        Network.shared.getRepositories(withSearch: s, completion: { [weak self] (repositories, error) in
+    
+            if let e = error {
+                DispatchQueue.main.async {
+                    self?.stopSpinner()
+                    let alert = UIAlertController(title: "Error", message: e.localizedDescription, preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                    self?.present(alert, animated: true, completion: nil)
+                }
+            } else {
+                DispatchQueue.main.async {
+                    if repositories.count > 0 {
+                        self?.repositories += repositories
+                        self?.updateRepos(withString: s)
+                    } else {
+                        self?.stopSpinner()
+                    }
+                }
+            }
+            
+        })
+        
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {

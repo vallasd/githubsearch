@@ -85,7 +85,7 @@ class Network: NSObject {
         maxUserPages = 9999
     }
     
-    /// This function gets repositories for information for a user or organization.  It handles paging internally, if you dont receive an empty array of Repositories, there may be additional pages to request.  Calll this function again and it will return additional repositories.  You can stop requesting once the function returns an empty Repository array or an error message.
+    /// This function gets github repositories for a user or organization.  It handles paging internally, if you dont receive an empty array of Repositories, there may be additional pages to request.  Call this function again and it will return additional repositories.  You can stop requesting once the function returns an empty Repository array or an error message.  If you use a new search string, the function will reset and start searching at page 1.  If you want to reset the paging for the same string, run the resetGetRepositories() function before calling this function.
     func getRepositories(withSearch s: String, completion: @escaping (_ result: [Repository], _ error: Error?) -> Void) {
         
         if s != repositorySearchString {
@@ -147,13 +147,14 @@ class Network: NSObject {
         let urlString = baseurl + "orgs/\(o)/repos?per_page=100&page=\(page)"
         let response = createSession(urlString: urlString)
         guard let session = response.session, let url = response.url else {
+            maxUserPages = currentOrgPage
             return ([], response.error)
         }
         
         let results = session.synchronousDataTask(with: url)
         let parsed = parseRepositories(data: results.0, response: results.1, error: results.2)
         
-        if parsed.result.count < 100 {
+        if parsed.result.count < 100 || parsed.error != nil {
             maxUserPages = currentOrgPage
         }
         
@@ -166,13 +167,14 @@ class Network: NSObject {
         let urlString = baseurl + "users/\(u)/repos?per_page=100&page=\(page)"
         let response = createSession(urlString: urlString)
         guard let session = response.session, let url = response.url else {
+            maxUserPages = currentOrgPage
             return ([], response.error)
         }
         
         let results = session.synchronousDataTask(with: url)
         let parsed = parseRepositories(data: results.0, response: results.1, error: results.2)
         
-        if parsed.result.count < 100 {
+        if parsed.result.count < 100 || parsed.error != nil {
             maxUserPages = currentOrgPage
         }
         
