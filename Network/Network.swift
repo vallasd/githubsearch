@@ -17,6 +17,7 @@ class Network: NSObject {
     func getRepositories(withUser u: String, completion: @escaping (_ result: [Repository], _ error: Error?) -> Void) {
         
         let genericError = NSError(domain: "", code: 500, userInfo: [NSLocalizedDescriptionKey: "unable to request repositories"])
+        let rateLimitError = NSError(domain: "", code: 500, userInfo: [NSLocalizedDescriptionKey: "rate limit reached, wait a while"])
         
         let urlString = baseurl + "users/\(u)/repos"
         guard let url = URL(string: urlString) else {
@@ -38,6 +39,12 @@ class Network: NSObject {
                     do {
                         let json = try JSONSerialization.jsonObject(with: d, options: [.allowFragments]) as? [Dictionary<String, AnyObject>] ?? []
                         if json.count == 0 {
+                            if let checkMessage = try JSONSerialization.jsonObject(with: d, options: [.allowFragments]) as? Dictionary<String, AnyObject> {
+                                if let m = checkMessage["message"] {
+                                    let messageError = NSError(domain: "", code: 500, userInfo: [NSLocalizedDescriptionKey: "\(m)"])
+                                    completion([], messageError)
+                                }
+                            }
                             completion([], genericError)
                             return
                         }

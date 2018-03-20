@@ -51,6 +51,19 @@ class SearchTVC: UITableViewController {
         }
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        let vc = segue.destination
+        
+        if let rvc = vc as? RepositoryTVC {
+            if let row = tableView.indexPathsForSelectedRows?.first?.row {
+                let rgbl = model[row]
+                rvc.title = rgbl.languageName
+                rvc.model = rgbl.repositories
+            }
+        }
+    }
+    
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 80.0
     }
@@ -68,11 +81,6 @@ class SearchTVC: UITableViewController {
         update(cell: cell, atRow: indexPath.row)
         return cell ?? UITableViewCell()
     }
-    
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("Touched pressed")
-    }
-    
 }
 
 extension SearchTVC: UISearchBarDelegate {
@@ -99,7 +107,6 @@ extension SearchTVC: UISearchBarDelegate {
                     }
                     
                     if let e = error {
-                        
                         let alert = UIAlertController(title: "Error", message: e.localizedDescription, preferredStyle: .alert)
                         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
                         DispatchQueue.main.async {

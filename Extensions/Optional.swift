@@ -35,10 +35,13 @@ extension Optional {
     }
     
     var stringDescription: String {
-        if self == nil { return "No description provided" }
-        if let string = self as? String { return string }
-        print("Error: unable to unwrap \(String(describing: self)) as string, returning ''")
-        return ""
+        if let string = self as? String {
+            if string == "" {
+                return "No description provided."
+            }
+            return string
+        }
+        return "No description provided."
     }
     
     var date: Date {
