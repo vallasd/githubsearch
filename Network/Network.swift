@@ -36,7 +36,11 @@ class Network: NSObject {
             if error == nil {
                 if let d = data {
                     do {
-                        let json = try JSONSerialization.jsonObject(with: d, options: [.allowFragments]) as? [Dictionary<String, AnyObject>] ?? [[:]]
+                        let json = try JSONSerialization.jsonObject(with: d, options: [.allowFragments]) as? [Dictionary<String, AnyObject>] ?? []
+                        if json.count == 0 {
+                            completion([], genericError)
+                            return
+                        }
                         let repositories = Repository.parseJSON(json: json)
                         completion(repositories, nil)
                         return

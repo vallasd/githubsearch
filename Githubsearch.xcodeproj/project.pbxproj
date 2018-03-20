@@ -21,6 +21,9 @@
 		108E953620601CEE00CBE763 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 108E953420601CEE00CBE763 /* LaunchScreen.storyboard */; };
 		108E954120601CEE00CBE763 /* GithubsearchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 108E954020601CEE00CBE763 /* GithubsearchTests.swift */; };
 		108E954C20601CEE00CBE763 /* GithubsearchUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 108E954B20601CEE00CBE763 /* GithubsearchUITests.swift */; };
+		10B4985620607351007A170B /* RepositoriesGroupedByLanguage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10B4985520607351007A170B /* RepositoriesGroupedByLanguage.swift */; };
+		10EC56E4206064280017BFFD /* SearchTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10EC56E3206064280017BFFD /* SearchTVC.swift */; };
+		10EC56E6206064360017BFFD /* RepositoryTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10EC56E5206064360017BFFD /* RepositoryTVC.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +64,9 @@
 		108E954720601CEE00CBE763 /* GithubsearchUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GithubsearchUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		108E954B20601CEE00CBE763 /* GithubsearchUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GithubsearchUITests.swift; sourceTree = "<group>"; };
 		108E954D20601CEE00CBE763 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		10B4985520607351007A170B /* RepositoriesGroupedByLanguage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoriesGroupedByLanguage.swift; sourceTree = "<group>"; };
+		10EC56E3206064280017BFFD /* SearchTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTVC.swift; sourceTree = "<group>"; };
+		10EC56E5206064360017BFFD /* RepositoryTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryTVC.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -108,6 +114,8 @@
 		103B29022060306500096D2E /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				10EC56E3206064280017BFFD /* SearchTVC.swift */,
+				10EC56E5206064360017BFFD /* RepositoryTVC.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -117,6 +125,7 @@
 			children = (
 				103B29062060325600096D2E /* Repository.swift */,
 				103B29082060334800096D2E /* Language.swift */,
+				10B4985520607351007A170B /* RepositoriesGroupedByLanguage.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -325,6 +334,9 @@
 				103B29112060600F00096D2E /* LanguageCell.swift in Sources */,
 				103B290D20604DB400096D2E /* URLSession.swift in Sources */,
 				103B29092060334800096D2E /* Language.swift in Sources */,
+				10EC56E6206064360017BFFD /* RepositoryTVC.swift in Sources */,
+				10B4985620607351007A170B /* RepositoriesGroupedByLanguage.swift in Sources */,
+				10EC56E4206064280017BFFD /* SearchTVC.swift in Sources */,
 				108E952C20601CEE00CBE763 /* AppDelegate.swift in Sources */,
 				103B2905206031E600096D2E /* Network.swift in Sources */,
 				103B29072060325600096D2E /* Repository.swift in Sources */,
