@@ -1,4 +1,4 @@
-# PLExportLayers 
+# Githubsearch
 
 This app lets a user search for repositories on Github by owner.
 
