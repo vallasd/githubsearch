@@ -98,6 +98,11 @@ class Network: NSObject {
         let co = currentOrgPage
         let mo = maxOrgPages
         
+        if cu >= mu && co >= mo {
+            completion([], nil)
+            return
+        }
+        
         DispatchQueue.global(qos: .background).async {
             [weak self] in
             
@@ -114,10 +119,6 @@ class Network: NSObject {
                     
                     totalRepositories = totalRepositories + response.result
                 }
-                
-                DispatchQueue.main.async {
-                    self?.currentUserPage += 1
-                }
             }
             
             // Get org repositories if we haven't reached the end of the paging
@@ -131,14 +132,13 @@ class Network: NSObject {
                     
                     totalRepositories = totalRepositories + response.result
                 }
-                
-                DispatchQueue.main.async {
-                    self?.currentOrgPage += 1
-                }
             }
             
             completion(totalRepositories, nil)
         }
+        
+        currentUserPage += 1
+        currentOrgPage += 1
     }
     
     // synchronous call to get Repositories for a specific org

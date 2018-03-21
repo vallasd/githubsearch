@@ -136,7 +136,6 @@ extension SearchTVC: UISearchBarDelegate {
             }
             
         })
-        
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
