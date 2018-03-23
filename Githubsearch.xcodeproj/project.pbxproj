@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		10095E3820617A0B0095453E /* URLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10095E3720617A0B0095453E /* URLSession.swift */; };
+		10095E762062BE910095453E /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10095E752062BE910095453E /* String.swift */; };
 		103B2905206031E600096D2E /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103B2904206031E600096D2E /* Network.swift */; };
 		103B29072060325600096D2E /* Repository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103B29062060325600096D2E /* Repository.swift */; };
 		103B290B20603E3B00096D2E /* Optional.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103B290A20603E3B00096D2E /* Optional.swift */; };
@@ -45,6 +46,7 @@
 
 /* Begin PBXFileReference section */
 		10095E3720617A0B0095453E /* URLSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSession.swift; sourceTree = "<group>"; };
+		10095E752062BE910095453E /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		103B2904206031E600096D2E /* Network.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
 		103B29062060325600096D2E /* Repository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Repository.swift; sourceTree = "<group>"; };
 		103B290A20603E3B00096D2E /* Optional.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Optional.swift; sourceTree = "<group>"; };
@@ -108,6 +110,7 @@
 				103B290A20603E3B00096D2E /* Optional.swift */,
 				10095E3720617A0B0095453E /* URLSession.swift */,
 				105F987720609A5A005B35D7 /* Date.swift */,
+				10095E752062BE910095453E /* String.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -330,6 +333,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				103B29132060602200096D2E /* RepositoryCell.swift in Sources */,
+				10095E762062BE910095453E /* String.swift in Sources */,
 				108E952E20601CEE00CBE763 /* ViewController.swift in Sources */,
 				10095E3820617A0B0095453E /* URLSession.swift in Sources */,
 				103B29112060600F00096D2E /* LanguageCell.swift in Sources */,

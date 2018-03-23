@@ -60,6 +60,18 @@ struct RepositoriesGroupedByLanguage {
         
         return realRGBLArray
     }
+}
+
+extension Sequence where Iterator.Element == RepositoriesGroupedByLanguage {
     
-    
+    var repositoryCount: Int {
+        
+        var count = 0
+        
+        for rgbl in self {
+            count += rgbl.repositories.count
+        }
+        
+        return count
+    }
 }

@@ -13,18 +13,46 @@ class Network: NSObject {
     let baseurl = "https://api.github.com/"
     
     // Private vars used to keep tracking of paging for repository queries
-    private var repositorySearchString = ""
-    private var currentOrgPage = 1
-    private var currentUserPage = 1
-    private var maxOrgPages = 9999
-    private var maxUserPages = 9999
+    
+    fileprivate enum RequestType {
+        case orgRepository
+        case userRepository
+    }
+    
+    fileprivate struct PageData {
+        let searchString: String
+        var userPage: Int
+        var maxUserPages: Int
+        var pagesDownloaded: Int // updated right before completion handler is called
+        var workItems: [DispatchWorkItem]
+    }
+    
+    fileprivate var pageData: PageData = PageData(searchString: "", userPage: 1, maxUserPages: 1, pagesDownloaded: 0, workItems: [])
+    fileprivate var repositoriesPerPage = 100
     
     static let shared = Network()
     
+    fileprivate func getLastPage(fromResponse: URLResponse?) -> Int? {
+        
+        if let response = fromResponse as? HTTPURLResponse {
+            if let links = response.allHeaderFields["Link"] as? String {
+                if let lastPage = links.githubLastPage {
+                    return lastPage
+                }
+            }
+        }
+        
+        return nil
+    }
+    
     /// This function parses the repository data returned from github, it either returns array of Repository structs and error message if applicable
-    fileprivate func parseRepositories(data: Data?, response: URLResponse?, error: Error?) -> (result: [Repository], error: Error?) {
+    fileprivate func parseRepositories(data: Data?, response: URLResponse?, error: Error?, firstPage: Bool) -> (result: [Repository], error: Error?) {
         
         let genericError = NSError(domain: "", code: 500, userInfo: [NSLocalizedDescriptionKey: "unable to request repositories"])
+        
+        if firstPage, let lastPage = getLastPage(fromResponse: response) {
+            pageData.maxUserPages = lastPage
+        }
         
         if error == nil {
             if let d = data {
@@ -76,106 +104,73 @@ class Network: NSObject {
         return (url, session, nil)
     }
     
-    /// Resets the getRepositories function so that it will start returning data from page 1
-    func resetGetRepositories() {
-        repositorySearchString = ""
-        currentOrgPage = 1
-        currentUserPage = 1
-        maxOrgPages = 9999
-        maxUserPages = 9999
+    /// Resets the paging information for getRepositories so that it will start returning data from page 1 and removes all outstanding work items in the queue.  You should call this and set the string to empty once you are done consuming all your data for a specific search request. (or else you will not be able to refresh the same search 
+    func resetPageData(withString: String) {
+        
+        // remove all current work items from queue
+        for workItem in pageData.workItems {
+            workItem.cancel()
+        }
+        
+        pageData = PageData(searchString: withString, userPage: 1, maxUserPages: 1, pagesDownloaded: 0, workItems: [])
     }
     
-    /// This function gets github repositories for a user or organization.  It handles paging internally, if you dont receive an empty array of Repositories, there may be additional pages to request.  Call this function again and it will return additional repositories.  You can stop requesting once the function returns an empty Repository array or an error message.  If you use a new search string, the function will reset and start searching at page 1.  If you want to reset the paging for the same string, run the resetGetRepositories() function before calling this function.
+    /// This gives an estimate of the number of repositories left to download.  This estimate is established once the first getRepositories function is run for a specific search string
+    func repositoriesLeftToDownload() -> Int {
+        let numUserPagesLeft = pageData.maxUserPages - pageData.pagesDownloaded
+        return numUserPagesLeft * repositoriesPerPage
+    }
+    
+    /// This function gets github repositories for a user / owner.  The first time this function is called with the same string, it will return the first page of the request (up to 100 repositories).  The second time it is called with the same search string, it will return the respositories for all of the remaining pages.  Use repositoriesLeftToDownload() to get an approximation of how many that will be.  After you have processed the downloaded repositories, call resetPageData(withString: "")
     func getRepositories(withSearch s: String, completion: @escaping (_ result: [Repository], _ error: Error?) -> Void) {
         
-        if s != repositorySearchString {
-            resetGetRepositories()
-            repositorySearchString = s
+        let cQueue = DispatchQueue(label: "com.queue.getRepositories.concurrent", attributes: .concurrent)
+        
+        if s != pageData.searchString {
+            resetPageData(withString: s)
         }
         
-        let cu = currentUserPage
-        let mu = maxUserPages
-        let co = currentOrgPage
-        let mo = maxOrgPages
-        
-        if cu >= mu && co >= mo {
-            completion([], nil)
-            return
-        }
-        
-        DispatchQueue.global(qos: .background).async {
-            [weak self] in
+        while pageData.userPage <= pageData.maxUserPages {
             
-            var totalRepositories: [Repository] = []
+            let pd = pageData // make copy
             
-            // Get user repositories if we haven't reached the end of the paging
-            if cu <= mu {
-                if let response = self?.getRepositories(withUser: s, page: cu) {
-                    
-                    if response.error != nil {
-                        completion([], response.error)
-                        return
+            let workItem = DispatchWorkItem {
+                [weak self] in
+                if let response = self?.getRepositories(withUser: pd.searchString, page: pd.userPage) {
+                    self?.pageData.pagesDownloaded += 1
+                    if let currentSearchString = self?.pageData.searchString {
+                        // we don't run completion handler if this was a result from an old work item from previous search
+                        if currentSearchString == pd.searchString {
+                            DispatchQueue.main.async {
+                                completion(response.result, response.error)
+                            }
+                        }
                     }
-                    
-                    totalRepositories = totalRepositories + response.result
                 }
             }
             
-            // Get org repositories if we haven't reached the end of the paging
-            if co <= mo {
-                if let response = self?.getRepositories(withOrg: s, page: cu) {
-                    
-                    if response.error != nil {
-                        completion([], response.error)
-                        return
-                    }
-                    
-                    totalRepositories = totalRepositories + response.result
-                }
-            }
+            pageData.workItems.append(workItem)
+            cQueue.async(execute: workItem)
             
-            completion(totalRepositories, nil)
+            pageData.userPage += 1
         }
-        
-        currentUserPage += 1
-        currentOrgPage += 1
-    }
-    
-    // synchronous call to get Repositories for a specific org
-    fileprivate func getRepositories(withOrg o: String, page: Int) -> (result: [Repository], error: Error?) {
-        
-        let urlString = baseurl + "orgs/\(o)/repos?per_page=100&page=\(page)"
-        let response = createSession(urlString: urlString)
-        guard let session = response.session, let url = response.url else {
-            maxUserPages = currentOrgPage
-            return ([], response.error)
-        }
-        
-        let results = session.synchronousDataTask(with: url)
-        let parsed = parseRepositories(data: results.0, response: results.1, error: results.2)
-        
-        if parsed.result.count < 100 || parsed.error != nil {
-            maxUserPages = currentOrgPage
-        }
-        
-        return parsed
     }
     
     // synchronous call to get Repositories for a specific user
     fileprivate func getRepositories(withUser u: String, page: Int) -> (result: [Repository], error: Error?) {
         
-        let urlString = baseurl + "users/\(u)/repos?per_page=100&page=\(page)"
+        let urlString = baseurl + "users/\(u)/repos?per_page=\(repositoriesPerPage)&type=owner&page=\(page)"
         let response = createSession(urlString: urlString)
         guard let session = response.session, let url = response.url else {
-            maxUserPages = currentOrgPage
             return ([], response.error)
         }
         
         let results = session.synchronousDataTask(with: url)
-        let parsed = parseRepositories(data: results.0, response: results.1, error: results.2)
+        let firstPage = page == 1 ? true : false
+        let parsed = parseRepositories(data: results.0, response: results.1, error: results.2, firstPage: firstPage)
         
-        if parsed.result.count < 100 || parsed.error != nil {
-            maxUserPages = currentOrgPage
+        if parsed.error != nil {
+            return ([], parsed.error)
         }
         
         return parsed
