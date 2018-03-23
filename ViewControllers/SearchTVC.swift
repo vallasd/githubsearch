@@ -137,17 +137,6 @@ extension SearchTVC: UISearchBarDelegate {
                 alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
                 self?.present(alert, animated: true, completion: nil)
                 
-            // we received no repositories
-            } else if repositories.count == 0 {
-                
-                self?.resetSearch()
-                
-                if firstTry {
-                    let alert = UIAlertController(title: "Error", message: "No repositories found for search string: \(s)", preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-                    self?.present(alert, animated: true, completion: nil)
-                }
-                
             // we received some repositories
             } else {
                 

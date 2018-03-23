@@ -59,18 +59,19 @@ class Network: NSObject {
                 do {
                     let json = try JSONSerialization.jsonObject(with: d, options: [.allowFragments]) as? [Dictionary<String, AnyObject>] ?? []
                     if json.count == 0 {
+                        let noRepositoryError = NSError(domain: "", code: 500, userInfo: [NSLocalizedDescriptionKey: "No repositories found for search string."])
                         if let checkMessage = try JSONSerialization.jsonObject(with: d, options: [.allowFragments]) as? Dictionary<String, AnyObject> {
                             if let m = checkMessage["message"] {
                                 if let mString = m as? String {
                                     if mString == "Not Found" {
-                                        return ([], nil)
+                                        return ([], noRepositoryError)
                                     }
                                 }
                                 let messageError = NSError(domain: "", code: 500, userInfo: [NSLocalizedDescriptionKey: "\(m)"])
                                 return ([], messageError)
                             }
                         }
-                        return ([], nil)
+                        return ([], noRepositoryError)
                     }
                     let repositories = Repository.parseJSON(json: json)
                     return (repositories, nil)
